@@ -1,6 +1,3 @@
-import java.sql.*;
-
-
 public class Database {
     public static String[] getData(){
         try {
@@ -9,7 +6,7 @@ public class Database {
             e.printStackTrace();
         }
 
-        final String DB_URL = "jdbc:ucanaccess:///workspace/LibraryRESTAPI/arioli.accdb;memory=false";
+        final String DB_URL = "jdbc:ucanaccess:///workspace/LibraryRESTAPI1/arioli.accdb;memory=false";
       
         String[] data = new String[3];
         data[0] = DB_URL;
