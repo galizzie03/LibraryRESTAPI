@@ -79,31 +79,35 @@ public class Library {
     @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response create(@FormParam("ISBN") String isbn,
-                           @FormParam("Titolo")String titolo,
-                           @FormParam("Autore") String autore){
-        if(checkParams(isbn, titolo, autore)) {
-            String obj = new Gson().toJson("Parameters must be valid");
-            return Response.serverError().entity(obj).build();
-        }
-        final String QUERY = "INSERT INTO Libri(ISBN,Titolo,Autore) VALUES(?,?,?)";
+    public Response create(@FormParam("Autore") String autore,
+                           @FormParam("Prezzo") String prezzo)
+    {
+        final String QUERY = "SELECT Titolo,Autore,ISBN FROM Libri WHERE Autore = ? AND Prezzo < ?";
+        final List<Book> books = new ArrayList<>();
         final String[] data = Database.getData();
         try(
 
                 Connection conn = DriverManager.getConnection(data[0]);
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         ) {
-            pstmt.setString(1,isbn);
-            pstmt.setString(2,autore);
-            pstmt.setString(3,titolo);
+            pstmt.setString(1,autore);
+            pstmt.setString(2,prezzo);
             pstmt.execute();
+            ResultSet results =  pstmt.executeQuery();
+            while (results.next()){
+                Book book = new Book();
+                book.setTitolo(results.getString("Titolo"));
+                book.setAutore(results.getString("Autore"));
+                book.setISBN(results.getString("ISBN"));
+                books.add(book);
+            }
         }catch (SQLException e){
             e.printStackTrace();
             String obj = new Gson().toJson(error);
             return Response.serverError().entity(obj).build();
         }
-        String obj = new Gson().toJson("Libro con ISBN:" + isbn + " aggiunto con successo");
-        return Response.ok(obj,MediaType.APPLICATION_JSON).build();
+        String obj = new Gson().toJson(books);
+        return Response.status(200).entity(obj).build();
     }
 
     @DELETE
