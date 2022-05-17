@@ -23,19 +23,13 @@
 					"mode": "urlencoded",
 					"urlencoded": [
 						{
-							"key": "ISBN",
-							"value": "",
-							"description": "",
-							"type": "text"
-						},
-						{
 							"key": "Autore",
 							"value": "",
 							"description": "",
 							"type": "text"
 						},
 						{
-							"key": "Titolo",
+							"key": "Prezzo",
 							"value": "",
 							"description": "",
 							"type": "text"
